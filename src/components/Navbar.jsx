@@ -55,7 +55,7 @@ const Navbar = ({ darkMode, toggleTheme }) => {
         .nav-logo {
           font-family: 'Fira Code', monospace;
           color: var(--cyan);
-          font-size: 1.15rem;
+          font-size: 2rem;
           font-weight: 500;
           text-decoration: none;
         }
@@ -177,7 +177,7 @@ const Navbar = ({ darkMode, toggleTheme }) => {
 
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-inner">
-          <a href="#home" className="nav-logo">&lt;AH /&gt;</a>
+          <a href="#home" className="nav-logo">&lt;AH/&gt;</a>
 
           <ul className="nav-links">
             {navLinks.map((link) => (

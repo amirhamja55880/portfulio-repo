@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
 const Certificates = () => {
-  const [certs, setCerts] = useState([
+  const [certs] = useState([
     {
       id: 1,
       name: 'React — The Complete Guide',
       issuer: 'Udemy',
       year: '2024',
-      image: null,
+      image: null,  ///projects/imgs.jpeg
     },
     {
       id: 2,
@@ -25,35 +25,14 @@ const Certificates = () => {
     },
   ]);
 
-  const [showForm, setShowForm] = useState(false);
-  const [newCert, setNewCert] = useState({ name: '', issuer: '', year: '', image: null });
-  const [preview, setPreview] = useState(null);
+  const [lightbox, setLightbox] = useState(null); // { image, name }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewCert((prev) => ({ ...prev, image: reader.result }));
-        setPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+  const openLightbox = (cert) => {
+    setLightbox(cert);
   };
 
-  const handleAdd = () => {
-    if (!newCert.name || !newCert.issuer || !newCert.year) return;
-    setCerts((prev) => [
-      ...prev,
-      { id: Date.now(), ...newCert },
-    ]);
-    setNewCert({ name: '', issuer: '', year: '', image: null });
-    setPreview(null);
-    setShowForm(false);
-  };
-
-  const handleDelete = (id) => {
-    setCerts((prev) => prev.filter((c) => c.id !== id));
+  const closeLightbox = () => {
+    setLightbox(null);
   };
 
   return (
@@ -72,17 +51,22 @@ const Certificates = () => {
           overflow: hidden;
           transition: all 0.3s ease;
           position: relative;
+          cursor: pointer;
         }
         .cert-card:hover {
           border-color: var(--blue);
           transform: translateY(-4px);
-          box-shadow: 0 10px 28px rgba(79,142,247,0.1);
+          box-shadow: 0 10px 28px rgba(79,142,247,0.15);
         }
         .cert-image {
           width: 100%;
           height: 160px;
           object-fit: cover;
           border-bottom: 1px solid var(--border);
+          transition: transform 0.3s ease;
+        }
+        .cert-card:hover .cert-image {
+          transform: scale(1.03);
         }
         .cert-image-placeholder {
           width: 100%;
@@ -93,6 +77,30 @@ const Certificates = () => {
           justify-content: center;
           font-size: 3rem;
           border-bottom: 1px solid var(--border);
+          transition: transform 0.3s ease;
+        }
+        .cert-card:hover .cert-image-placeholder {
+          transform: scale(1.05);
+        }
+        .cert-view-overlay {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%;
+          height: 160px;
+          background: rgba(0,0,0,0.45);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          font-size: 0.85rem;
+          color: #fff;
+          gap: 6px;
+          font-family: 'Fira Code', monospace;
+          letter-spacing: 0.5px;
+        }
+        .cert-card:hover .cert-view-overlay {
+          opacity: 1;
         }
         .cert-body {
           padding: 18px 20px;
@@ -120,135 +128,101 @@ const Certificates = () => {
           color: var(--muted);
           font-size: 0.78rem;
         }
-        .cert-delete {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background: rgba(239,68,68,0.15);
-          border: 1px solid rgba(239,68,68,0.3);
-          color: #ef4444;
-          border-radius: 6px;
-          padding: 4px 10px;
-          font-size: 0.75rem;
-          cursor: pointer;
-          font-family: inherit;
-          transition: all 0.2s ease;
-          opacity: 0;
-        }
-        .cert-card:hover .cert-delete {
-          opacity: 1;
-        }
-        .cert-add-btn {
-          width: 100%;
-          border: 2px dashed var(--border);
-          background: transparent;
-          border-radius: 14px;
-          padding: 28px;
-          text-align: center;
-          color: var(--muted);
-          font-size: 0.92rem;
-          cursor: pointer;
-          font-family: inherit;
-          transition: all 0.3s ease;
+
+        /* ── Lightbox ── */
+        .lightbox-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.85);
+          backdrop-filter: blur(6px);
+          z-index: 9999;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
+          padding: 24px;
+          animation: lbFadeIn 0.25s ease;
         }
-        .cert-add-btn:hover {
-          border-color: var(--blue);
-          color: var(--blue);
-          background: rgba(79,142,247,0.05);
+        @keyframes lbFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
-        .cert-form {
+        .lightbox-box {
           background: var(--card);
           border: 1px solid var(--border);
-          border-radius: 16px;
-          padding: 28px;
-          margin-top: 20px;
-        }
-        .cert-form h4 {
-          font-size: 1rem;
-          font-weight: 600;
-          margin-bottom: 20px;
-          color: var(--cyan);
-          font-family: 'Fira Code', monospace;
-        }
-        .cert-form-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 14px;
-          margin-bottom: 16px;
-        }
-        .cert-form input {
-          background: var(--bg);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          padding: 10px 14px;
-          color: var(--text);
-          font-family: inherit;
-          font-size: 0.88rem;
-          outline: none;
-          transition: border-color 0.2s ease;
+          border-radius: 18px;
+          overflow: hidden;
+          max-width: 780px;
           width: 100%;
+          box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+          animation: lbSlideUp 0.28s ease;
+          position: relative;
         }
-        .cert-form input:focus {
-          border-color: var(--blue);
+        @keyframes lbSlideUp {
+          from { transform: translateY(30px); opacity: 0; }
+          to   { transform: translateY(0);    opacity: 1; }
         }
-        .cert-form input::placeholder {
-          color: var(--muted);
+        .lightbox-img {
+          width: 100%;
+          max-height: 480px;
+          object-fit: contain;
+          background: #0a0f1a;
+          display: block;
         }
-        .cert-upload-label {
+        .lightbox-placeholder {
+          width: 100%;
+          height: 300px;
+          background: linear-gradient(135deg, var(--bg), var(--bg2));
           display: flex;
           align-items: center;
-          gap: 10px;
-          background: var(--bg);
-          border: 1px dashed var(--border);
-          border-radius: 8px;
-          padding: 10px 14px;
-          color: var(--muted);
-          font-size: 0.88rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          margin-bottom: 16px;
+          justify-content: center;
+          font-size: 6rem;
         }
-        .cert-upload-label:hover {
-          border-color: var(--blue);
-          color: var(--blue);
-        }
-        .cert-preview {
-          width: 100%;
-          height: 120px;
-          object-fit: cover;
-          border-radius: 8px;
-          margin-bottom: 16px;
-          border: 1px solid var(--border);
-        }
-        .cert-form-btns {
+        .lightbox-footer {
+          padding: 20px 24px;
           display: flex;
+          align-items: center;
+          justify-content: space-between;
           gap: 12px;
         }
-        .btn-cancel {
-          background: var(--bg);
-          border: 1px solid var(--border);
+        .lightbox-info .lb-name {
+          font-weight: 700;
+          font-size: 1.05rem;
+          color: var(--text);
+          margin-bottom: 4px;
+        }
+        .lightbox-info .lb-issuer {
+          color: var(--cyan);
+          font-family: 'Fira Code', monospace;
+          font-size: 0.82rem;
+        }
+        .lightbox-info .lb-year {
           color: var(--muted);
-          padding: 10px 20px;
+          font-size: 0.82rem;
+          margin-top: 2px;
+        }
+        .lightbox-close {
+          background: rgba(239,68,68,0.12);
+          border: 1px solid rgba(239,68,68,0.3);
+          color: #ef4444;
           border-radius: 8px;
+          padding: 8px 18px;
+          font-size: 0.85rem;
           cursor: pointer;
           font-family: inherit;
-          font-size: 0.9rem;
           transition: all 0.2s ease;
+          flex-shrink: 0;
         }
-        .btn-cancel:hover {
-          border-color: var(--muted);
-          color: var(--text);
+        .lightbox-close:hover {
+          background: rgba(239,68,68,0.25);
         }
+
         @media (max-width: 768px) {
-          .cert-form-grid {
-            grid-template-columns: 1fr;
-          }
           .certs-grid {
             grid-template-columns: 1fr;
+          }
+          .lightbox-footer {
+            flex-direction: column;
+            align-items: flex-start;
           }
         }
       `}</style>
@@ -260,12 +234,19 @@ const Certificates = () => {
 
           <div className="certs-grid">
             {certs.map((cert, i) => (
-              <div key={cert.id} className={`cert-card reveal stagger-${i + 1}`}>
+              <div
+                key={cert.id}
+                className={`cert-card reveal stagger-${i + 1}`}
+                onClick={() => openLightbox(cert)}
+              >
                 {cert.image ? (
                   <img src={cert.image} alt={cert.name} className="cert-image" />
                 ) : (
                   <div className="cert-image-placeholder">🏆</div>
                 )}
+                <div className="cert-view-overlay">
+                  🔍 View Certificate
+                </div>
                 <div className="cert-body">
                   <div className="cert-icon">📜</div>
                   <div>
@@ -274,57 +255,32 @@ const Certificates = () => {
                     <div className="cert-year">📅 {cert.year}</div>
                   </div>
                 </div>
-                <button className="cert-delete" onClick={() => handleDelete(cert.id)}>
-                  ✕ Remove
-                </button>
               </div>
             ))}
           </div>
-
-          {/* Add Button */}
-          {!showForm && (
-            <button className="cert-add-btn reveal" onClick={() => setShowForm(true)}>
-              ＋ Add New Certificate
-            </button>
-          )}
-
-          {/* Add Form */}
-          {showForm && (
-            <div className="cert-form">
-              <h4>// add certificate</h4>
-              <div className="cert-form-grid">
-                <input
-                  placeholder="Certificate Name"
-                  value={newCert.name}
-                  onChange={(e) => setNewCert({ ...newCert, name: e.target.value })}
-                />
-                <input
-                  placeholder="Issuer (e.g. Udemy)"
-                  value={newCert.issuer}
-                  onChange={(e) => setNewCert({ ...newCert, issuer: e.target.value })}
-                />
-                <input
-                  placeholder="Year (e.g. 2024)"
-                  value={newCert.year}
-                  onChange={(e) => setNewCert({ ...newCert, year: e.target.value })}
-                />
-              </div>
-
-              <label className="cert-upload-label">
-                📎 Upload Certificate Image (optional)
-                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageChange} />
-              </label>
-
-              {preview && <img src={preview} alt="preview" className="cert-preview" />}
-
-              <div className="cert-form-btns">
-                <button className="btn-primary" onClick={handleAdd}>Save Certificate</button>
-                <button className="btn-cancel" onClick={() => { setShowForm(false); setPreview(null); }}>Cancel</button>
-              </div>
-            </div>
-          )}
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      {lightbox && (
+        <div className="lightbox-backdrop" onClick={closeLightbox}>
+          <div className="lightbox-box" onClick={(e) => e.stopPropagation()}>
+            {lightbox.image ? (
+              <img src={lightbox.image} alt={lightbox.name} className="lightbox-img" />
+            ) : (
+              <div className="lightbox-placeholder">🏆</div>
+            )}
+            <div className="lightbox-footer">
+              <div className="lightbox-info">
+                <div className="lb-name">{lightbox.name}</div>
+                <div className="lb-issuer">{lightbox.issuer}</div>
+                <div className="lb-year">📅 {lightbox.year}</div>
+              </div>
+              <button className="lightbox-close" onClick={closeLightbox}>✕ Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

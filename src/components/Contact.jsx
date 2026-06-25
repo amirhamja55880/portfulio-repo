@@ -1,62 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+
+// Icon
+import gmailIcon from '../assets/mailIcon.png';
+import whatsappIcon from '../assets/whatsapp.png';
+import likedinIcon from '../assets/linkedin.png';
+import fiverrIcon from '../assets/fiver.png';
+
+
+
+// ✅ এখানে তোমার EmailJS info বসাও
+const EMAILJS_SERVICE_ID  = 'service_apc105f';   // EmailJS → Email Services
+const EMAILJS_TEMPLATE_ID = 'template_360pvjf';  // EmailJS → Email Templates
+const EMAILJS_PUBLIC_KEY  = 'dp1wDCZ3HSgAxjG9j'; // EmailJS → Account → API Keys
 
 const Contact = () => {
+  const formRef = useRef();
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
+
     setLoading(true);
+    setError(false);
 
-    // Gmail mailto link
-    const mailtoLink = `mailto:your.email@gmail.com?subject=${encodeURIComponent(
-      form.subject || 'Portfolio Contact'
-    )}&body=${encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-    )}`;
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name:  form.name,
+          from_email: form.email,
+          subject:    form.subject || 'Portfolio Contact',
+          message:    form.message,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
 
-    setTimeout(() => {
-      window.location.href = mailtoLink;
-      setLoading(false);
       setSent(true);
       setForm({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setSent(false), 4000);
-    }, 800);
+      setTimeout(() => setSent(false), 5000);
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      setError(true);
+      setTimeout(() => setError(false), 5000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const contacts = [
     {
-      icon: '📧',
+      icon: <img src={gmailIcon} alt="gamil" width="30" />,
       label: 'Email',
-      value: 'your.email@gmail.com',
-      href: 'mailto:your.email@gmail.com',
+      value: 'amirhamja12675@gmail.com',
+      href: 'mailto:amirhamja12675@gmail.com',
       color: '#ea4335',
     },
     {
-      icon: '💬',
+      icon: <img src={whatsappIcon} alt="gamil" width="30" />,
       label: 'WhatsApp',
-      value: '+880 XXXX-XXXXXX',
-      href: 'https://wa.me/880XXXXXXXXXX',
+      value: '+8801748985357',
+      href: 'https://wa.me/8801748985357',
       color: '#25d366',
     },
     {
-      icon: '💼',
+      icon: <img src={likedinIcon} alt="gamil" width="30" />,
       label: 'LinkedIn',
-      value: 'linkedin.com/in/amirhamza',
-      href: 'https://linkedin.com/in/amirhamza',
+      value: 'linkedin.com/in/amir-hamja-8a37853b2',
+      href: 'https://www.linkedin.com/in/amir-hamja-8a37853b2?utm_source=share_via&utm_content=profile&utm_medium=member_android',
       color: '#0077b5',
     },
     {
-      icon: '🎯',
+      icon: <img src={fiverrIcon} alt="gamil" width="30" />,
       label: 'Fiverr',
-      value: 'fiverr.com/amirhamza',
-      href: 'https://fiverr.com/amirhamza',
+      value: 'fiverr.com/techiehamza',
+      href: 'https://www.fiverr.com/techiehamza',
       color: '#1dbf73',
     },
   ];
@@ -134,7 +161,6 @@ const Contact = () => {
           transform: translateX(4px);
           color: var(--blue);
         }
-        /* Form */
         .contact-form {
           background: var(--card);
           border: 1px solid var(--border);
@@ -226,6 +252,17 @@ const Contact = () => {
           margin-top: 14px;
           font-weight: 500;
         }
+        .error-msg {
+          text-align: center;
+          padding: 16px;
+          background: rgba(239,68,68,0.1);
+          border: 1px solid rgba(239,68,68,0.3);
+          border-radius: 10px;
+          color: #ef4444;
+          font-size: 0.92rem;
+          margin-top: 14px;
+          font-weight: 500;
+        }
         @media (max-width: 768px) {
           .contact-grid {
             grid-template-columns: 1fr;
@@ -270,7 +307,7 @@ const Contact = () => {
             </div>
 
             {/* Right — Form */}
-            <div className="contact-form reveal">
+            <div className="contact-form reveal" ref={formRef}>
               <h3>// send a message</h3>
               <div className="form-row">
                 <div className="form-group">
@@ -320,9 +357,15 @@ const Contact = () => {
               >
                 {loading ? '⏳ Sending...' : '📨 Send Message →'}
               </button>
+
               {sent && (
                 <div className="success-msg">
-                  ✅ Message sent! I'll get back to you soon.
+                  ✅ Message sent successfully! I'll get back to you soon.
+                </div>
+              )}
+              {error && (
+                <div className="error-msg">
+                  ❌ Something went wrong. Please try again or email me directly.
                 </div>
               )}
             </div>

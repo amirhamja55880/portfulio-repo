@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 
+// ── Project data ──────────────────────────────────────────────
+// image field এ আপনার project এর screenshot path দিন
+// যেমন: image: '/projects/worldcup.png'
+// অথবা online URL: image: 'https://i.imgur.com/xxx.png'
+// image না থাকলে emoji দেখাবে automatically
 const projects = [
   {
     id: 1,
+    image: null, // 👈 এখানে: '/projects/worldcup.png' দিন
     emoji: '🌍',
     tag: 'React + Firebase',
     category: 'React',
     title: 'FIFA World Cup 2026 Live Score',
     desc: 'Real-time score, schedule & streaming guide for football fans. Built with Firebase Realtime DB + Node.js backend proxy.',
-    live: 'https://worldcup2026-g8he.onrender.com',
-    github: 'https://github.com/amirhamja55880/FIFA-world-cup-2026-repo',
+    live: '#',
+    github: '#',
   },
   {
     id: 2,
+    image: null, // 👈 এখানে: '/projects/ecommerce.png' দিন
     emoji: '🛒',
     tag: 'Next.js + MongoDB',
     category: 'Next.js',
@@ -23,6 +30,7 @@ const projects = [
   },
   {
     id: 3,
+    image: null,
     emoji: '🤖',
     tag: 'AI + Node.js',
     category: 'AI',
@@ -33,6 +41,7 @@ const projects = [
   },
   {
     id: 4,
+    image: null,
     emoji: '📋',
     tag: 'React + Express',
     category: 'React',
@@ -43,6 +52,7 @@ const projects = [
   },
   {
     id: 5,
+    image: null,
     emoji: '🏥',
     tag: 'Next.js + MongoDB',
     category: 'Next.js',
@@ -53,6 +63,7 @@ const projects = [
   },
   {
     id: 6,
+    image: null,
     emoji: '📰',
     tag: 'React + Node.js',
     category: 'React',
@@ -63,7 +74,7 @@ const projects = [
   },
 ];
 
-const filters = ['All', 'React', 'Next.js', 'AI'];
+const filters = ['All', 'React', 'Next.js'];
 
 const Projects = () => {
   const [active, setActive] = useState('All');
@@ -119,17 +130,51 @@ const Projects = () => {
         .project-card:hover {
           border-color: var(--blue);
           transform: translateY(-6px);
-          box-shadow: 0 12px 32px rgba(79,142,247,0.1);
+          box-shadow: 0 12px 32px rgba(79,142,247,0.12);
         }
+
+        /* ── Cover image area ── */
         .project-img {
-          height: 180px;
+          height: 200px;
+          position: relative;
+          overflow: hidden;
+          border-bottom: 1px solid var(--border);
           background: linear-gradient(135deg, var(--bg), var(--bg2));
+        }
+        /* Real screenshot */
+        .project-img img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+        .project-card:hover .project-img img {
+          transform: scale(1.05);
+        }
+        /* Emoji fallback */
+        .project-img-emoji {
+          width: 100%;
+          height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 3.5rem;
-          border-bottom: 1px solid var(--border);
         }
+        /* Category badge on image */
+        .project-img-badge {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          background: rgba(10,15,30,0.75);
+          backdrop-filter: blur(6px);
+          border: 1px solid var(--border);
+          color: var(--cyan);
+          font-size: 0.7rem;
+          font-family: 'Fira Code', monospace;
+          padding: 4px 10px;
+          border-radius: 20px;
+        }
+
         .project-body {
           padding: 22px;
         }
@@ -163,11 +208,29 @@ const Projects = () => {
           border-radius: 7px;
           transition: all 0.2s ease;
           font-weight: 500;
+          text-decoration: none;
         }
         .project-links a:hover {
           background: rgba(79,142,247,0.12);
           transform: translateY(-2px);
         }
+        /* Disabled link style when # */
+        .project-links a.disabled-link {
+          opacity: 0.35;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+
+        /* Empty state */
+        .projects-empty {
+          grid-column: 1 / -1;
+          text-align: center;
+          padding: 60px 20px;
+          color: var(--muted);
+          font-family: 'Fira Code', monospace;
+          font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
           .projects-grid {
             grid-template-columns: 1fr;
@@ -185,7 +248,7 @@ const Projects = () => {
             {filters.map((f) => (
               <button
                 key={f}
-                className={`filter-btn ${active === f ? 'active' : ''}`}
+                className={`filter-btn${active === f ? ' active' : ''}`}
                 onClick={() => setActive(f)}
               >
                 {f}
@@ -195,21 +258,42 @@ const Projects = () => {
 
           {/* Projects Grid */}
           <div className="projects-grid">
+            {filtered.length === 0 && (
+              <div className="projects-empty">// no projects found</div>
+            )}
             {filtered.map((project, i) => (
               <div
                 key={project.id}
-                className={`project-card reveal stagger-${i + 1}`}
+                className="project-card"
               >
-                <div className="project-img">{project.emoji}</div>
+                {/* Cover Image */}
+                <div className="project-img">
+                  {project.image ? (
+                    <img src={project.image} alt={project.title} />
+                  ) : (
+                    <div className="project-img-emoji">{project.emoji}</div>
+                  )}
+                  <span className="project-img-badge">{project.tag}</span>
+                </div>
+
                 <div className="project-body">
-                  <div className="project-tag">{project.tag}</div>
                   <div className="project-title">{project.title}</div>
                   <div className="project-desc">{project.desc}</div>
                   <div className="project-links">
-                    <a href={project.live} target="_blank" rel="noreferrer">
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={project.live === '#' ? 'disabled-link' : ''}
+                    >
                       🔗 Live Demo
                     </a>
-                    <a href={project.github} target="_blank" rel="noreferrer">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={project.github === '#' ? 'disabled-link' : ''}
+                    >
                       💻 GitHub
                     </a>
                   </div>

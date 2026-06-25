@@ -1,5 +1,12 @@
 import React from 'react';
 
+// Icon
+import gmailIcon from '../assets/mailIcon.png';
+import whatsappIcon from '../assets/whatsapp.png';
+import likedinIcon from '../assets/linkedin.png';
+import fiverrIcon from '../assets/fiver.png';
+
+
 const Footer = () => {
   const quickLinks = [
     { label: 'About', href: '#about' },
@@ -13,10 +20,31 @@ const Footer = () => {
   ];
 
   const socials = [
-    { icon: '📧', label: 'Gmail', href: 'mailto:your.email@gmail.com', color: '#ea4335' },
-    { icon: '💬', label: 'WhatsApp', href: 'https://wa.me/880XXXXXXXXXX', color: '#25d366' },
-    { icon: '💼', label: 'LinkedIn', href: 'https://linkedin.com/in/amirhamza', color: '#0077b5' },
-    { icon: '🎯', label: 'Fiverr', href: 'https://fiverr.com/amirhamza', color: '#1dbf73' },
+    { 
+      icon: <img src={gmailIcon} alt="gamil" width="30" />,
+      label: 'Gmail', 
+      href: 'mailto:amirhamja12675@gmail.com',
+      color: '#ea4335'
+      },
+
+    { 
+      icon: <img src={whatsappIcon} alt="whatsapp" width="30" />,
+      label: 'WhatsApp', 
+      href: 'https://wa.me/8801748985357', 
+      color: '#25d366' 
+    },
+
+    { icon: <img src={likedinIcon} alt="linkedin" width="30" />,
+       label: 'LinkedIn', 
+       href: 'https://www.linkedin.com/in/amir-hamja-8a37853b2?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
+       color: '#0077b5' 
+      },
+
+    { icon: <img src={fiverrIcon} alt="fiverr" width="30" />,
+      label: 'Fiverr',
+      href: 'https://www.fiverr.com/techiehamza', 
+      color:'#1dbf73' 
+    },
   ];
 
   const scrollToTop = () => {
@@ -45,7 +73,7 @@ const Footer = () => {
         .footer-brand .logo {
           font-family: 'Fira Code', monospace;
           color: var(--cyan);
-          font-size: 1.4rem;
+          font-size: 1.7rem;
           font-weight: 500;
           margin-bottom: 16px;
           display: block;
@@ -236,7 +264,7 @@ const Footer = () => {
 
             {/* Brand */}
             <div className="footer-brand">
-              <span className="logo">&lt;AH /&gt;</span>
+              <span className="logo">&lt;AH/&gt;</span>
               <p>
                 Full Stack Web Developer from Bangladesh 🇧🇩. Building modern, fast & beautiful websites that help businesses grow.
               </p>
