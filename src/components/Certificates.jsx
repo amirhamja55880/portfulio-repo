@@ -4,25 +4,25 @@ const Certificates = () => {
   const [certs] = useState([
     {
       id: 1,
-      name: 'React — The Complete Guide',
-      issuer: 'Udemy',
-      year: '2024',
-      image: null,  ///projects/imgs.jpeg
-    },
-    {
-      id: 2,
-      name: 'Node.js & Express Bootcamp',
-      issuer: 'Coursera',
-      year: '2024',
-      image: null,
-    },
-    {
-      id: 3,
-      name: 'Next.js Full Stack Development',
-      issuer: 'freeCodeCamp',
+      name: 'Artificial Intelligence',
+      issuer: 'BRACK',
       year: '2025',
-      image: null,
+      image: '/projects/AI sartificakte.jpeg',  ///projects/imgs.jpeg
     },
+    // {
+    //   id: 2,
+    //   name: 'Node.js & Express Bootcamp',
+    //   issuer: 'Coursera',
+    //   year: '2024',
+    //   image: null,
+    // },
+    // {
+    //   id: 3,
+    //   name: 'Next.js Full Stack Development',
+    //   issuer: 'freeCodeCamp',
+    //   year: '2025',
+    //   image: null,
+    // },
   ]);
 
   const [lightbox, setLightbox] = useState(null); // { image, name }
