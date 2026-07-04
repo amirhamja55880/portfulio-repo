@@ -9,7 +9,7 @@ import {
   doc,
 } from 'firebase/firestore';
 
-const ADMIN_PASSWORD = 'hamza@admin2025';
+const ADMIN_PASSWORD = 'Hamza@420';
 const CLOUD_NAME = 'fb5nop8h';
 const UPLOAD_PRESET = 'portfolio_upload';
 
