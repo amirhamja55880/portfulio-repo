@@ -10,9 +10,11 @@ import Certificates from './components/Certificates';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import AdminPanel from './components/AdminPanel';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
+  const isAdmin = window.location.pathname === '/admin';
 
   useEffect(() => {
     if (darkMode) {
@@ -24,6 +26,7 @@ function App() {
 
   // Scroll reveal animation
   useEffect(() => {
+    if (isAdmin) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -34,14 +37,14 @@ function App() {
       },
       { threshold: 0.1 }
     );
-
     const elements = document.querySelectorAll('.reveal');
     elements.forEach((el) => observer.observe(el));
-
     return () => observer.disconnect();
-  }, []);
+  }, [isAdmin]);
 
   const toggleTheme = () => setDarkMode(!darkMode);
+
+  if (isAdmin) return <AdminPanel />;
 
   return (
     <div className="App">
@@ -61,4 +64,3 @@ function App() {
 }
 
 export default App;
-
