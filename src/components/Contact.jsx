@@ -6,6 +6,8 @@ import gmailIcon from '../assets/mailIcon.png';
 import whatsappIcon from '../assets/whatsapp.png';
 import likedinIcon from '../assets/linkedin.png';
 import fiverrIcon from '../assets/fiver.png';
+import freelancerIcon from '../assets/freelancer.png';
+import facebookIcon from '../assets/facebook.png';
 
 
 
@@ -58,6 +60,12 @@ const Contact = () => {
   };
 
   const contacts = [
+    { icon: <img src={facebookIcon} alt="facebook" width="30" />,
+      label: 'Facebook',
+      value: 'facebook.com/amir.hamza.771817',
+      href: 'https://www.facebook.com/amir.hamza.771817', 
+      color:'#1877F2'
+    },
     {
       icon: <img src={gmailIcon} alt="gamil" width="30" />,
       label: 'Email',
@@ -86,6 +94,13 @@ const Contact = () => {
       href: 'https://www.fiverr.com/techiehamza',
       color: '#1dbf73',
     },
+    { icon: <img src={freelancerIcon} alt="freelancer" width="30" />,
+      label: 'Freelancer',
+      value: 'freelacer.com./ahamza2210',
+      href: 'https://www.freelancer.com.bd/u/ahamza2210', 
+      color:'#1dbf73' 
+    },
+      
   ];
 
   return (

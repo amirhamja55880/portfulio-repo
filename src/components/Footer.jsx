@@ -5,6 +5,9 @@ import gmailIcon from '../assets/mailIcon.png';
 import whatsappIcon from '../assets/whatsapp.png';
 import likedinIcon from '../assets/linkedin.png';
 import fiverrIcon from '../assets/fiver.png';
+import freelancerIcon from '../assets/freelancer.png';
+import facebookIcon from '../assets/facebook.png';
+
 
 
 const Footer = () => {
@@ -44,6 +47,16 @@ const Footer = () => {
       label: 'Fiverr',
       href: 'https://www.fiverr.com/techiehamza', 
       color:'#1dbf73' 
+    },
+    { icon: <img src={freelancerIcon} alt="freelancer" width="30" />,
+      label: 'Freelancer',
+      href: 'https://www.freelancer.com.bd/u/ahamza2210', 
+      color:'#1dbf73' 
+    },
+    { icon: <img src={facebookIcon} alt="facebook" width="30" />,
+      label: 'Facebook',
+      href: 'https://www.facebook.com/amir.hamza.771817', 
+      color:'#1877F2'
     },
   ];
 
